@@ -1,598 +1,661 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Menu, 
-  MapPin, 
-  Phone, 
-  Clock, 
-  Star, 
-  ChevronRight, 
-  Utensils, 
-  ChefHat, 
-  Coffee, 
-  Users, 
-  Instagram, 
-  X,
-  CheckCircle2,
-  Wallet,
-  Coins,
-  ArrowUp,
-  Quote
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>샤브토랑 창원점</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-// 스크롤 시 요소가 나타나는 애니메이션 컴포넌트
-const RevealOnScroll = ({ children, delay = 0 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => {
-      if (ref.current) observer.unobserve(ref.current);
-    };
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={`transition-all duration-1000 ease-out transform ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      }`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </div>
-  );
-};
-
-const ShabutaurantChangwon = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // showEventModal 상태 삭제
-  const [activeTab, setActiveTab] = useState('shabu');
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // 스크롤 감지 헤더 스타일 변경
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // 브랜드 컬러 정의
-  const BRAND_MAIN = "bg-[#fac03b]";      // Yellow Background
-  const BRAND_POINT = "bg-[#384c2a]";     // Dark Green Background
-  const TEXT_POINT = "text-[#384c2a]";    // Dark Green Text
-  const TEXT_MAIN = "text-[#fac03b]";     // Yellow Text
-  const BORDER_POINT = "border-[#384c2a]"; // Dark Green Border
-
-  // 메뉴 데이터
-  const shabuMenu = [
-    { name: "시그니처 샤브", desc: "담백하고 깔끔한 샤브토랑의 기본 샤브샤브", price: "7,900원", tag: "Best" },
-    { name: "얼큰 샤브", desc: "매콤하고 얼큰한 육수의 샤브샤브", price: "8,700원", tag: "Hot" },
-    { name: "마라 샤브", desc: "중독성 강한 얼얼함, MZ세대 취향 저격", price: "8,900원", tag: "Hit" },
-    { name: "토마토 샤브", desc: "상큼한 감칠맛, 파스타와 환상 궁합", price: "8,900원", tag: "Special" },
-    { name: "스키야키", desc: "자작한 소스에 졸여 먹는 정통 관서식 스키야키", price: "8,900원", tag: "New" },
-  ];
-
-  const afterDishMenu = [
-    { name: "크림 파스타 / 리조또", desc: "고소한 우유 크림의 풍미가 가득한 마무리", price: "2,900원" },
-    { name: "로제 파스타 / 리조또 / 떡볶이", desc: "토마토와 크림의 황금비율로 즐기는 로제 소스", price: "3,500원" },
-    { name: "크림마라 파스타 / 리조또 / 떡볶이", desc: "부드러운 크림 속에 숨겨진 알싸한 마라의 매력", price: "3,500원" },
-    { name: "크림불닭 파스타 / 리조또 / 떡볶이", desc: "화끈한 불닭 소스와 부드러운 크림의 중독적인 만남", price: "3,500원" },
-    { name: "국물 떡볶이", desc: "감칠맛 가득한 진한 육수로 즐기는 매콤 떡볶이", price: "2,900원" },
-  ];
-
-  return (
-    <div className="font-sans text-gray-800 bg-white relative overflow-x-hidden">
-      {/* CSS 애니메이션 정의 */}
-      <style>{`
+    <style>
+        /* 커스텀 애니메이션 정의 */
         @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-          100% { transform: translateY(0px); }
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
         @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
         }
         @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 15px rgba(250, 192, 59, 0.2); transform: scale(1); }
-          50% { box-shadow: 0 0 25px rgba(250, 192, 59, 0.6); transform: scale(1.02); }
+            0%, 100% { box-shadow: 0 0 15px rgba(250, 192, 59, 0.2); transform: scale(1); }
+            50% { box-shadow: 0 0 25px rgba(250, 192, 59, 0.6); transform: scale(1.02); }
         }
+        
         .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-blob { animation: blob 7s infinite; }
         .animate-pulse-glow { animation: pulse-glow 2s infinite; }
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
-      `}</style>
-      
-      {/* 오픈 이벤트 모달 삭제됨 */}
 
-      {/* 헤더 */}
-      <header className={`fixed top-0 w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-2' : 'bg-transparent py-3 md:py-4'}`}>
-        <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center gap-2 md:gap-3">
-            <img 
-              src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/logo.png" 
-              alt="샤브토랑 로고" 
-              className="h-6 md:h-10 w-auto object-contain transition-transform hover:scale-105"
-            />
-            <span className="text-xs md:text-sm font-medium text-gray-500 mt-1">창원점</span>
-          </div>
-          
-          <nav className="hidden md:flex gap-8 font-medium text-gray-600">
-            {['브랜드 소개', '메뉴', '공간', '오시는 길'].map((item, idx) => {
-              const hrefs = ['#about', '#menu', '#interior', '#location'];
-              return (
-                <a key={idx} href={hrefs[idx]} className={`hover:${TEXT_POINT} transition relative group`}>
-                  {item}
-                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 ${BRAND_POINT} transition-all group-hover:w-full`}></span>
-                </a>
-              );
-            })}
-          </nav>
+        /* 스크롤 애니메이션용 클래스 */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-out;
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-          <button className="md:hidden p-1" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <Menu size={24} className={TEXT_POINT} />
-          </button>
+        /* 기본 폰트 설정 (Noto Sans KR 등 웹폰트 적용 권장) */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white relative overflow-x-hidden">
 
-          <a href="#location" className={`hidden md:block ${BRAND_POINT} text-white px-5 py-2 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition shadow-md`}>
-            예약하기
-          </a>
-        </div>
-
-        {/* 모바일 메뉴 - 높이 애니메이션 최적화 */}
-        <div className={`md:hidden bg-white border-b absolute w-full shadow-lg transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className="flex flex-col gap-4 text-center p-4">
-            {['브랜드 소개', '메뉴', '공간', '오시는 길'].map((item, idx) => {
-               const hrefs = ['#about', '#menu', '#interior', '#location'];
-               return (
-                <a key={idx} href={hrefs[idx]} onClick={() => setIsMenuOpen(false)} className="text-gray-700 font-medium py-1 active:text-[#384c2a]">{item}</a>
-               );
-            })}
-          </div>
-        </div>
-      </header>
-
-      {/* 히어로 섹션 - 모바일 패딩 및 폰트 크기 조정 */}
-      <section className="pt-24 pb-12 px-4 md:pt-32 md:pb-20 bg-gradient-to-br from-[#384c2a]/5 to-white relative overflow-hidden min-h-[85vh] md:min-h-[90vh] flex items-center">
-        {/* 움직이는 배경 요소 */}
-        <div className="absolute top-0 -left-4 w-48 h-48 md:w-72 md:h-72 bg-[#fac03b] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 -right-4 w-48 h-48 md:w-72 md:h-72 bg-[#384c2a] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-48 h-48 md:w-72 md:h-72 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
-
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-12 items-center relative z-10">
-          <div className="space-y-4 md:space-y-6 text-center md:text-left">
-            <RevealOnScroll>
-              <div className={`${BRAND_MAIN} text-[#384c2a] inline-block px-3 py-1 rounded-full text-xs md:text-sm font-bold mb-2 shadow-sm`}>
-                ✨ 창원 최초 상륙
-              </div>
-              {/* 모바일 폰트 크기 최적화: text-4xl -> text-3xl */}
-              <h2 className="text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight text-gray-900">
-                샤브샤브와<br/>
-                <span className={TEXT_POINT}>레스토랑의 맛남</span>
-              </h2>
-            </RevealOnScroll>
+    <!-- 헤더 -->
+    <header id="main-header" class="fixed top-0 w-full z-40 transition-all duration-300 py-3 md:py-4">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 md:gap-3">
+                <img src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/logo.png" alt="샤브토랑 로고" class="h-6 md:h-10 w-auto object-contain transition-transform hover:scale-105">
+                <span class="text-xs md:text-sm font-medium text-gray-500 mt-1">창원점</span>
+            </div>
             
-            <RevealOnScroll delay={200}>
-              <div className="text-base md:text-lg text-gray-600 leading-relaxed space-y-2">
-                <p>
-                  오늘은 어떤 맛이 당기시나요?<br className="hidden md:block"/>
-                  5가지 비법 육수와 10가지 토핑으로<br className="hidden md:block"/>
-                  <strong className={TEXT_POINT}>오직 나만을 위한 레시피</strong>를 완성하세요.
-                </p>
-                <p className="pt-1 md:pt-2">
-                  샤브샤브의 건강함에 파스타의 풍미를 더한,<br className="hidden md:block"/>
-                  샤브토랑만의 <span className={`font-bold ${TEXT_POINT} bg-[#fac03b]/20 px-1`}>맛있는 만남</span>을 경험해보세요.
-                </p>
-              </div>
-            </RevealOnScroll>
+            <nav class="hidden md:flex gap-8 font-medium text-gray-600">
+                <a href="#about" class="hover:text-[#384c2a] transition relative group">
+                    브랜드 소개
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#384c2a] transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#menu" class="hover:text-[#384c2a] transition relative group">
+                    메뉴
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#384c2a] transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#interior" class="hover:text-[#384c2a] transition relative group">
+                    공간
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#384c2a] transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#location" class="hover:text-[#384c2a] transition relative group">
+                    오시는 길
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#384c2a] transition-all group-hover:w-full"></span>
+                </a>
+            </nav>
 
-            <RevealOnScroll delay={400}>
-              <div className="flex items-center justify-center md:justify-start gap-2 mb-2 pt-2">
-                 <span className="bg-red-500 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded-md animate-pulse">HOT</span>
-                 <span className={`font-bold text-lg md:text-xl ${TEXT_POINT}`}>7,900원 부터 ~</span>
-              </div>
-              <div className="flex justify-center md:justify-start gap-3 md:gap-4 pt-2">
-                <a href="#menu" className={`${BRAND_POINT} text-white px-6 py-3 md:px-8 rounded-xl font-bold text-sm md:text-base hover:shadow-lg hover:scale-105 active:scale-95 transition duration-300`}>
-                  메뉴 보기
-                </a>
-                <a href="#location" className={`bg-white border-2 ${BORDER_POINT} ${TEXT_POINT} px-6 py-3 md:px-8 rounded-xl font-bold text-sm md:text-base hover:bg-gray-50 hover:scale-105 active:scale-95 transition duration-300`}>
-                  매장 위치
-                </a>
-              </div>
-            </RevealOnScroll>
-          </div>
-          
-          {/* 이미지 영역 */}
-          <div className="relative flex justify-center items-center mt-6 md:mt-0">
-            {/* 이미지 컨테이너 */}
-            <div className="relative z-10 w-full max-w-[320px] md:max-w-lg group">
-              <div className="absolute inset-0 bg-black/5 rounded-[1.5rem] md:rounded-[2rem] transform rotate-3 scale-100 transition-transform duration-500 group-hover:rotate-6"></div>
-              <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-2xl bg-white transform transition-transform duration-500 group-hover:-translate-y-2">
-                <img 
-                  src="https://shabutaurant.com/assets/img/brand/meal-item-bg02.jpg?250818" 
-                  alt="샤브토랑 샤브샤브와 파스타 연출 이미지" 
-                  className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105"
-                />
+            <button id="mobile-menu-btn" class="md:hidden p-1">
+                <i data-lucide="menu" class="text-[#384c2a] w-6 h-6"></i>
+            </button>
+
+            <a href="#location" class="hidden md:block bg-[#384c2a] text-white px-5 py-2 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition shadow-md">
+                예약하기
+            </a>
+        </div>
+
+        <!-- 모바일 메뉴 -->
+        <div id="mobile-menu" class="md:hidden bg-white border-b absolute w-full shadow-lg transition-all duration-300 overflow-hidden max-h-0 opacity-0">
+            <div class="flex flex-col gap-4 text-center p-4">
+                <a href="#about" class="mobile-link text-gray-700 font-medium py-1 active:text-[#384c2a]">브랜드 소개</a>
+                <a href="#menu" class="mobile-link text-gray-700 font-medium py-1 active:text-[#384c2a]">메뉴</a>
+                <a href="#interior" class="mobile-link text-gray-700 font-medium py-1 active:text-[#384c2a]">공간</a>
+                <a href="#location" class="mobile-link text-gray-700 font-medium py-1 active:text-[#384c2a]">오시는 길</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 히어로 섹션 -->
+    <section class="pt-24 pb-12 px-4 md:pt-32 md:pb-20 bg-gradient-to-br from-[#384c2a]/5 to-white relative overflow-hidden min-h-[85vh] md:min-h-[90vh] flex items-center">
+        <!-- 움직이는 배경 요소 -->
+        <div class="absolute top-0 -left-4 w-48 h-48 md:w-72 md:h-72 bg-[#fac03b] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div class="absolute top-0 -right-4 w-48 h-48 md:w-72 md:h-72 bg-[#384c2a] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-8 left-20 w-48 h-48 md:w-72 md:h-72 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-12 items-center relative z-10">
+            <div class="space-y-4 md:space-y-6 text-center md:text-left">
+                <div class="reveal-on-scroll">
+                    <div class="bg-[#fac03b] text-[#384c2a] inline-block px-3 py-1 rounded-full text-xs md:text-sm font-bold mb-2 shadow-sm">
+                        ✨ 창원 최초 상륙
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight text-gray-900">
+                        샤브샤브와<br/>
+                        <span class="text-[#384c2a]">레스토랑의 맛남</span>
+                    </h2>
+                </div>
                 
-                {/* 뱃지 - 모바일 폰트/패딩 축소 */}
-                <div className={`absolute bottom-3 right-3 md:bottom-4 md:right-4 bg-white/95 backdrop-blur-md ${TEXT_POINT} px-3 py-2 md:px-4 rounded-xl text-[10px] md:text-xs font-bold shadow-lg border border-gray-100 flex items-center gap-2`}>
-                  <div className={`${BRAND_MAIN} p-1 rounded-full`}>
-                    <Star size={10} className="md:w-3 md:h-3 text-white" fill="currentColor" />
-                  </div>
-                  <div>
-                    <span className="block text-[8px] md:text-[10px] text-gray-500 font-normal">7,900원의 행복</span>
-                    갓성비 1인 다이닝
-                  </div>
+                <div class="reveal-on-scroll" style="transition-delay: 200ms;">
+                    <div class="text-base md:text-lg text-gray-600 leading-relaxed space-y-2">
+                        <p>
+                            오늘은 어떤 맛이 당기시나요?<br class="hidden md:block"/>
+                            5가지 비법 육수와 10가지 토핑으로<br class="hidden md:block"/>
+                            <strong class="text-[#384c2a]">오직 나만을 위한 레시피</strong>를 완성하세요.
+                        </p>
+                        <p class="pt-1 md:pt-2">
+                            샤브샤브의 건강함에 파스타의 풍미를 더한,<br class="hidden md:block"/>
+                            샤브토랑만의 <span class="font-bold text-[#384c2a] bg-[#fac03b]/20 px-1">맛있는 만남</span>을 경험해보세요.
+                        </p>
+                    </div>
                 </div>
-              </div>
+
+                <div class="reveal-on-scroll" style="transition-delay: 400ms;">
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-2 pt-2">
+                        <span class="bg-red-500 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded-md animate-pulse">HOT</span>
+                        <span class="font-bold text-lg md:text-xl text-[#384c2a]">7,900원 부터 ~</span>
+                    </div>
+                    <div class="flex justify-center md:justify-start gap-3 md:gap-4 pt-2">
+                        <a href="#menu" class="bg-[#384c2a] text-white px-6 py-3 md:px-8 rounded-xl font-bold text-sm md:text-base hover:shadow-lg hover:scale-105 active:scale-95 transition duration-300">
+                            메뉴 보기
+                        </a>
+                        <a href="#location" class="bg-white border-2 border-[#384c2a] text-[#384c2a] px-6 py-3 md:px-8 rounded-xl font-bold text-sm md:text-base hover:bg-gray-50 hover:scale-105 active:scale-95 transition duration-300">
+                            매장 위치
+                        </a>
+                    </div>
+                </div>
             </div>
             
-            {/* 배경 장식 요소 조정 */}
-            <div className={`absolute -right-10 -bottom-10 w-32 h-32 md:w-40 md:h-40 ${BRAND_POINT} rounded-full blur-3xl opacity-10 animate-blob`}></div>
-            <div className={`absolute -left-10 top-10 w-32 h-32 md:w-40 md:h-40 ${BRAND_MAIN} rounded-full blur-3xl opacity-10 animate-blob animation-delay-2000`}></div>
-          </div>
-        </div>
-      </section>
-
-      {/* 브랜드 앰버서더 배너 (류수영) - 패딩 최적화 */}
-      <section className={`${BRAND_MAIN} relative overflow-hidden py-8 md:py-10 shadow-inner`}>
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-        <div className="max-w-6xl mx-auto px-4 relative flex items-center justify-between md:justify-center gap-4 md:gap-16">
-          <div className="hidden md:block flex-shrink-0 relative">
-             <div className="absolute -inset-4 bg-white/20 rounded-full blur-xl"></div>
-             <img 
-              src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/%EB%A5%98%EC%88%98%EC%98%81.png" 
-              alt="배우 류수영" 
-              className="h-48 w-auto object-contain transform hover:scale-110 transition duration-500 relative z-10 drop-shadow-lg"
-            />
-          </div>
-          
-          <div className="text-[#384c2a] flex-1 md:flex-none text-left md:text-center z-10 pl-2 md:pl-0">
-            <div className="flex items-center gap-2 mb-1 md:mb-2 md:justify-center">
-               <Quote size={16} className="md:w-5 md:h-5 transform rotate-180 opacity-50" />
-               <span className="font-bold text-xs md:text-sm uppercase tracking-widest opacity-80">Brand Ambassador</span>
+            <!-- 이미지 영역 -->
+            <div class="relative flex justify-center items-center mt-6 md:mt-0">
+                <div class="relative z-10 w-full max-w-[320px] md:max-w-lg group">
+                    <div class="absolute inset-0 bg-black/5 rounded-[1.5rem] md:rounded-[2rem] transform rotate-3 scale-100 transition-transform duration-500 group-hover:rotate-6"></div>
+                    <div class="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-2xl bg-white transform transition-transform duration-500 group-hover:-translate-y-2">
+                        <img src="https://shabutaurant.com/assets/img/brand/meal-item-bg02.jpg?250818" alt="샤브토랑 샤브샤브와 파스타 연출 이미지" class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105">
+                        
+                        <div class="absolute bottom-3 right-3 md:bottom-4 md:right-4 bg-white/95 backdrop-blur-md text-[#384c2a] px-3 py-2 md:px-4 rounded-xl text-[10px] md:text-xs font-bold shadow-lg border border-gray-100 flex items-center gap-2">
+                            <div class="bg-[#fac03b] p-1 rounded-full">
+                                <i data-lucide="star" class="w-3 h-3 text-white fill-current"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[8px] md:text-[10px] text-gray-500 font-normal">7,900원의 행복</span>
+                                갓성비 1인 다이닝
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="absolute -right-10 -bottom-10 w-32 h-32 md:w-40 md:h-40 bg-[#384c2a] rounded-full blur-3xl opacity-10 animate-blob"></div>
+                <div class="absolute -left-10 top-10 w-32 h-32 md:w-40 md:h-40 bg-[#fac03b] rounded-full blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
             </div>
-            {/* 모바일 폰트 크기 조정: text-xl -> text-2xl */}
-            <h3 className="text-xl md:text-4xl font-extrabold mb-1 leading-tight">믿고 먹는 배우, 류수영의 선택!</h3>
-            <p className="font-medium text-sm md:text-lg opacity-90 break-keep">"건강하고 맛있는 한 끼, 샤브토랑에서 시작하세요"</p>
-          </div>
-
-          <div className="md:hidden flex-shrink-0 pr-2">
-             <img 
-              src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/%EB%A5%98%EC%88%98%EC%98%81.png" 
-              alt="배우 류수영" 
-              className="h-24 w-auto object-contain drop-shadow-md"
-            />
-          </div>
         </div>
-      </section>
+    </section>
 
-      {/* USP 섹션 (왜 샤브토랑인가?) - 패딩 및 그리드 갭 조정 */}
-      <section id="about" className="py-12 md:py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <RevealOnScroll>
-            <div className="text-center mb-10 md:mb-16">
-              <h3 className={`${TEXT_MAIN} font-bold text-sm md:text-base uppercase tracking-wider mb-2`}>Why Shabutaurant</h3>
-              <h2 className="text-2xl md:text-4xl font-bold text-gray-900">샤브토랑이 특별한 3가지 이유</h2>
+    <!-- 브랜드 앰버서더 배너 -->
+    <section class="bg-[#fac03b] relative overflow-hidden py-8 md:py-10 shadow-inner">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div class="max-w-6xl mx-auto px-4 relative flex items-center justify-between md:justify-center gap-4 md:gap-16">
+            <div class="hidden md:block flex-shrink-0 relative">
+                <div class="absolute -inset-4 bg-white/20 rounded-full blur-xl"></div>
+                <img src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/%EB%A5%98%EC%88%98%EC%98%81.png" alt="배우 류수영" class="h-48 w-auto object-contain transform hover:scale-110 transition duration-500 relative z-10 drop-shadow-lg">
             </div>
-          </RevealOnScroll>
-
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            {/* 카드 1 */}
-            <RevealOnScroll delay={100}>
-              <div className="bg-gray-50 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-500 hover:-translate-y-2 group h-full">
-                <div className={`w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl shadow-md flex items-center justify-center ${TEXT_POINT} mb-4 md:mb-6 group-hover:${BRAND_POINT} group-hover:text-white transition duration-500 group-hover:rotate-6`}>
-                  <Users size={24} className="md:w-7 md:h-7" />
+            
+            <div class="text-[#384c2a] flex-1 md:flex-none text-left md:text-center z-10 pl-2 md:pl-0">
+                <div class="flex items-center gap-2 mb-1 md:mb-2 md:justify-center">
+                    <i data-lucide="quote" class="w-4 h-4 md:w-5 md:h-5 transform rotate-180 opacity-50"></i>
+                    <span class="font-bold text-xs md:text-sm uppercase tracking-widest opacity-80">Brand Ambassador</span>
                 </div>
-                <h4 className="text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:text-[#384c2a] transition">눈치 보지 않는 '나만의 팟'</h4>
-                <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-                  혼자 와도, 여럿이 와도 위생적인 1인 1냄비.<br/>
-                  칸막이와 개방형 테이블이 공존하는 하이브리드 공간에서 오롯이 나에게 집중하세요.
-                </p>
-              </div>
-            </RevealOnScroll>
+                <h3 class="text-xl md:text-4xl font-extrabold mb-1 leading-tight">믿고 먹는 배우, 류수영의 선택!</h3>
+                <p class="font-medium text-sm md:text-lg opacity-90 break-keep">"건강하고 맛있는 한 끼, 샤브토랑에서 시작하세요"</p>
+            </div>
 
-            {/* 카드 2 */}
-            <RevealOnScroll delay={200}>
-              <div className="bg-gray-50 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-500 hover:-translate-y-2 group h-full">
-                <div className={`w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl shadow-md flex items-center justify-center ${TEXT_POINT} mb-4 md:mb-6 group-hover:${BRAND_POINT} group-hover:text-white transition duration-500 group-hover:rotate-6`}>
-                  <ChefHat size={24} className="md:w-7 md:h-7" />
-                </div>
-                <h4 className="text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:text-[#384c2a] transition">샤브 후 '파스타 & 리조또'</h4>
-                <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-                  샤브샤브의 마무리는 죽? 아니요!<br/>
-                  니뽕내뽕의 노하우가 담긴 크림 파스타와 리조또로 완벽한 양식 코스를 완성하세요.
-                </p>
-              </div>
-            </RevealOnScroll>
-
-            {/* 카드 3 */}
-            <RevealOnScroll delay={300}>
-              <div className={`bg-gray-50 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-500 hover:-translate-y-2 group border-2 border-transparent hover:${BORDER_POINT} h-full`}>
-                <div className={`w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl shadow-md flex items-center justify-center ${TEXT_POINT} mb-4 md:mb-6 group-hover:${BRAND_MAIN} group-hover:text-[#384c2a] transition duration-500 group-hover:rotate-6`}>
-                  <Coins size={24} className="md:w-7 md:h-7" />
-                </div>
-                <h4 className="text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:text-[#384c2a] transition">놀라운 가성비 '7,900원'</h4>
-                <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-                  커피 한 잔 값으로 즐기는 든든한 한 끼.<br/>
-                  신선한 야채와 고기, 퀄리티 높은 육수를 거품 없는 합리적인 가격에 제공합니다.
-                </p>
-              </div>
-            </RevealOnScroll>
-          </div>
+            <div class="md:hidden flex-shrink-0 pr-2">
+                <img src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/%EB%A5%98%EC%88%98%EC%98%81.png" alt="배우 류수영" class="h-24 w-auto object-contain drop-shadow-md">
+            </div>
         </div>
-      </section>
+    </section>
 
-      {/* 메뉴 섹션 - 모바일 그리드 및 패딩 최적화 */}
-      <section id="menu" className={`py-12 md:py-20 bg-[#384c2a]/5 relative overflow-hidden`}>
-        {/* 배경 장식 */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-[#fac03b] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+    <!-- USP 섹션 -->
+    <section id="about" class="py-12 md:py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="reveal-on-scroll text-center mb-10 md:mb-16">
+                <h3 class="text-[#fac03b] font-bold text-sm md:text-base uppercase tracking-wider mb-2">Why Shabutaurant</h3>
+                <h2 class="text-2xl md:text-4xl font-bold text-gray-900">샤브토랑이 특별한 3가지 이유</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+                <!-- Card 1 -->
+                <div class="reveal-on-scroll" style="transition-delay: 100ms;">
+                    <div class="bg-gray-50 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-500 hover:-translate-y-2 group h-full">
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl shadow-md flex items-center justify-center text-[#384c2a] mb-4 md:mb-6 group-hover:bg-[#384c2a] group-hover:text-white transition duration-500 group-hover:rotate-6">
+                            <i data-lucide="users" class="w-6 h-6 md:w-7 md:h-7"></i>
+                        </div>
+                        <h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:text-[#384c2a] transition">눈치 보지 않는 '나만의 팟'</h4>
+                        <p class="text-sm md:text-base text-gray-600 leading-relaxed">
+                            혼자 와도, 여럿이 와도 위생적인 1인 1냄비.<br/>
+                            칸막이와 개방형 테이블이 공존하는 하이브리드 공간에서 오롯이 나에게 집중하세요.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="reveal-on-scroll" style="transition-delay: 200ms;">
+                    <div class="bg-gray-50 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-500 hover:-translate-y-2 group h-full">
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl shadow-md flex items-center justify-center text-[#384c2a] mb-4 md:mb-6 group-hover:bg-[#384c2a] group-hover:text-white transition duration-500 group-hover:rotate-6">
+                            <i data-lucide="chef-hat" class="w-6 h-6 md:w-7 md:h-7"></i>
+                        </div>
+                        <h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:text-[#384c2a] transition">샤브 후 '파스타 & 리조또'</h4>
+                        <p class="text-sm md:text-base text-gray-600 leading-relaxed">
+                            샤브샤브의 마무리는 죽? 아니요!<br/>
+                            니뽕내뽕의 노하우가 담긴 크림 파스타와 리조또로 완벽한 양식 코스를 완성하세요.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="reveal-on-scroll" style="transition-delay: 300ms;">
+                    <div class="bg-gray-50 rounded-2xl p-6 md:p-8 hover:shadow-xl transition duration-500 hover:-translate-y-2 group border-2 border-transparent hover:border-[#384c2a] h-full">
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl shadow-md flex items-center justify-center text-[#384c2a] mb-4 md:mb-6 group-hover:bg-[#fac03b] group-hover:text-[#384c2a] transition duration-500 group-hover:rotate-6">
+                            <i data-lucide="coins" class="w-6 h-6 md:w-7 md:h-7"></i>
+                        </div>
+                        <h4 class="text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:text-[#384c2a] transition">놀라운 가성비 '7,900원'</h4>
+                        <p class="text-sm md:text-base text-gray-600 leading-relaxed">
+                            커피 한 잔 값으로 즐기는 든든한 한 끼.<br/>
+                            신선한 야채와 고기, 퀄리티 높은 육수를 거품 없는 합리적인 가격에 제공합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 메뉴 섹션 -->
+    <section id="menu" class="py-12 md:py-20 bg-[#384c2a]/5 relative overflow-hidden">
+        <div class="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-[#fac03b] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
         
-        <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <RevealOnScroll>
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">취향대로 고르는 즐거움</h2>
-              <div className="flex justify-center gap-2 p-1 bg-white rounded-full inline-flex shadow-sm">
-                <button 
-                  onClick={() => setActiveTab('shabu')}
-                  className={`px-4 py-2 md:px-6 rounded-full text-sm md:text-base font-bold transition-all duration-300 ${activeTab === 'shabu' ? `${BRAND_POINT} text-white shadow-lg scale-105` : 'text-gray-500 hover:bg-gray-100'}`}
-                >
-                  메인 샤브샤브
-                </button>
-                <button 
-                  onClick={() => setActiveTab('after')}
-                  className={`px-4 py-2 md:px-6 rounded-full text-sm md:text-base font-bold transition-all duration-300 ${activeTab === 'after' ? `${BRAND_POINT} text-white shadow-lg scale-105` : 'text-gray-500 hover:bg-gray-100'}`}
-                >
-                  애프터 디쉬
-                </button>
-              </div>
+        <div class="max-w-6xl mx-auto px-4 relative z-10">
+            <div class="reveal-on-scroll text-center mb-8 md:mb-12">
+                <h2 class="text-2xl md:text-4xl font-bold text-gray-900 mb-4">취향대로 고르는 즐거움</h2>
+                <div class="flex justify-center gap-2 p-1 bg-white rounded-full inline-flex shadow-sm">
+                    <button onclick="switchTab('shabu')" id="tab-shabu" class="px-4 py-2 md:px-6 rounded-full text-sm md:text-base font-bold transition-all duration-300 bg-[#384c2a] text-white shadow-lg scale-105">
+                        메인 샤브샤브
+                    </button>
+                    <button onclick="switchTab('after')" id="tab-after" class="px-4 py-2 md:px-6 rounded-full text-sm md:text-base font-bold transition-all duration-300 text-gray-500 hover:bg-gray-100">
+                        애프터 디쉬
+                    </button>
+                </div>
             </div>
-          </RevealOnScroll>
 
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* 왼쪽: 메뉴 이미지 (탭에 따라 이미지 변경 - Grid Stack 사용으로 중앙 정렬) */}
-            <RevealOnScroll>
-              {/* 모바일에서는 이미지 숨김 처리하거나 작게 표시 - 여기서는 숨김처리 하여 리스트에 집중 */}
-              <div className="hidden md:grid grid-cols-1 grid-rows-1 min-h-[400px] items-center justify-items-center relative group">
-                {/* 이미지 뒤 그림자 효과 */}
-                <div className="col-start-1 row-start-1 w-full max-w-md h-full bg-[#384c2a]/10 rounded-full filter blur-3xl transform scale-90 translate-y-4 transition duration-700 group-hover:scale-100 group-hover:bg-[#384c2a]/20"></div>
-                
-                {/* 샤브샤브 이미지 */}
-                <img 
-                  src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/menu.png" 
-                  alt="샤브토랑 메인 메뉴" 
-                  className={`col-start-1 row-start-1 z-10 w-full max-w-md mx-auto transform transition-all duration-700 drop-shadow-xl ${activeTab === 'shabu' ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-90 -rotate-12 pointer-events-none'}`}
-                />
-                
-                {/* 애프터 디쉬 이미지 */}
-                <img 
-                  src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/afterdish.png" 
-                  alt="샤브토랑 애프터 디쉬" 
-                  className={`col-start-1 row-start-1 z-10 w-full max-w-md mx-auto transform transition-all duration-700 drop-shadow-xl ${activeTab === 'after' ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-90 rotate-12 pointer-events-none'}`}
-                />
-              </div>
-            </RevealOnScroll>
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                <!-- 왼쪽: 메뉴 이미지 -->
+                <div class="reveal-on-scroll hidden md:grid grid-cols-1 grid-rows-1 min-h-[400px] items-center justify-items-center relative group">
+                    <div class="col-start-1 row-start-1 w-full max-w-md h-full bg-[#384c2a]/10 rounded-full filter blur-3xl transform scale-90 translate-y-4 transition duration-700 group-hover:scale-100 group-hover:bg-[#384c2a]/20"></div>
+                    
+                    <img id="img-shabu" src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/menu.png" alt="샤브토랑 메인 메뉴" class="col-start-1 row-start-1 z-10 w-full max-w-md mx-auto transform transition-all duration-700 drop-shadow-xl opacity-100 scale-100 rotate-0">
+                    <img id="img-after" src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/afterdish.png" alt="샤브토랑 애프터 디쉬" class="col-start-1 row-start-1 z-10 w-full max-w-md mx-auto transform transition-all duration-700 drop-shadow-xl opacity-0 scale-90 rotate-12 pointer-events-none">
+                </div>
 
-            {/* 오른쪽: 메뉴 리스트 - 화살표 제거 및 단순화 */}
-            <div className="relative min-h-[auto] md:min-h-[400px]">
-              {/* 메뉴 리스트 - 페이드 효과 적용 */}
-              <div className={`grid gap-3 md:gap-4 transition-all duration-500 ${activeTab === 'shabu' ? 'opacity-100 translate-x-0' : 'hidden opacity-0 translate-x-10'}`}>
-                {shabuMenu.map((item, idx) => (
-                  <RevealOnScroll key={`shabu-${idx}`} delay={idx * 50}>
-                    <div className={`bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:${BORDER_POINT} cursor-default`}>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-base md:text-lg font-bold text-gray-800">{item.name}</h4>
-                          {item.tag && (
-                            <span className={`text-[9px] md:text-[10px] px-2 py-0.5 rounded-full ${item.tag === 'Best' ? `${BRAND_MAIN} text-[#384c2a]` : 'bg-red-100 text-red-600'} animate-pulse`}>
-                              {item.tag}
-                            </span>
-                          )}
+                <!-- 오른쪽: 메뉴 리스트 -->
+                <div class="relative min-h-[auto] md:min-h-[400px]">
+                    <!-- 샤브 메뉴 리스트 -->
+                    <div id="content-shabu" class="grid gap-3 md:gap-4 transition-all duration-500 opacity-100 translate-x-0">
+                        <!-- Items generated by JS or hardcoded below -->
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="text-base md:text-lg font-bold text-gray-800">시그니처 샤브</h4>
+                                    <span class="text-[9px] md:text-[10px] px-2 py-0.5 rounded-full bg-[#fac03b] text-[#384c2a] animate-pulse">Best</span>
+                                </div>
+                                <p class="text-xs md:text-sm text-gray-500">담백하고 깔끔한 샤브토랑의 기본 샤브샤브</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">7,900원</span>
+                            </div>
                         </div>
-                        <p className="text-xs md:text-sm text-gray-500">{item.desc}</p>
-                      </div>
-                      <div className="text-right flex-shrink-0 ml-3 md:ml-4">
-                        <span className={`block font-bold ${TEXT_POINT} text-base md:text-lg`}>{item.price}</span>
-                      </div>
-                    </div>
-                  </RevealOnScroll>
-                ))}
-              </div>
-
-              <div className={`grid gap-3 md:gap-4 transition-all duration-500 ${activeTab === 'after' ? 'opacity-100 translate-x-0' : 'hidden opacity-0 translate-x-10'}`}>
-                {afterDishMenu.map((item, idx) => (
-                  <RevealOnScroll key={`after-${idx}`} delay={idx * 50}>
-                    <div className={`bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:${BORDER_POINT} cursor-default`}>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-base md:text-lg font-bold text-gray-800">{item.name}</h4>
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="text-base md:text-lg font-bold text-gray-800">얼큰 샤브</h4>
+                                    <span class="text-[9px] md:text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 animate-pulse">Hot</span>
+                                </div>
+                                <p class="text-xs md:text-sm text-gray-500">매콤하고 얼큰한 육수의 샤브샤브</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">8,700원</span>
+                            </div>
                         </div>
-                        <p className="text-xs md:text-sm text-gray-500">{item.desc}</p>
-                      </div>
-                      <div className="text-right flex-shrink-0 ml-3 md:ml-4">
-                        <span className={`block font-bold ${TEXT_POINT} text-base md:text-lg`}>{item.price}</span>
-                      </div>
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="text-base md:text-lg font-bold text-gray-800">마라 샤브</h4>
+                                    <span class="text-[9px] md:text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 animate-pulse">Hit</span>
+                                </div>
+                                <p class="text-xs md:text-sm text-gray-500">중독성 강한 얼얼함, MZ세대 취향 저격</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">8,900원</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="text-base md:text-lg font-bold text-gray-800">토마토 샤브</h4>
+                                    <span class="text-[9px] md:text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 animate-pulse">Special</span>
+                                </div>
+                                <p class="text-xs md:text-sm text-gray-500">상큼한 감칠맛, 파스타와 환상 궁합</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">8,900원</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="text-base md:text-lg font-bold text-gray-800">스키야키</h4>
+                                    <span class="text-[9px] md:text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 animate-pulse">New</span>
+                                </div>
+                                <p class="text-xs md:text-sm text-gray-500">자작한 소스에 졸여 먹는 정통 관서식 스키야키</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">8,900원</span>
+                            </div>
+                        </div>
                     </div>
-                  </RevealOnScroll>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-8 md:mt-10 text-center">
-            <p className="text-gray-500 text-xs md:text-sm mb-4">* 모든 메뉴는 포장 가능합니다. (비조리/조리 선택 가능)</p>
-          </div>
-        </div>
-      </section>
 
-      {/* 인테리어/분위기 섹션 - 패딩 최적화 */}
-      <section id="interior" className="py-12 md:py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div className="order-2 md:order-1">
-              <RevealOnScroll>
-                <div className="grid grid-cols-2 gap-3 md:gap-4">
-                  <div className="h-32 md:h-48 bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden shadow-lg relative group">
-                     <img 
-                      src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/table1.jpg" 
-                      alt="매장 인테리어1" 
-                      className="w-full h-full object-cover group-hover:scale-110 transition duration-700" 
-                    />
-                     <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition"></div>
-                  </div>
-                  <div className="h-32 md:h-48 bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden shadow-lg mt-4 md:mt-8 relative group">
-                     <img 
-                      src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/table2.jpg" 
-                      alt="매장 인테리어2" 
-                      className="w-full h-full object-cover group-hover:scale-110 transition duration-700" 
-                    />
-                     <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition"></div>
-                  </div>
+                    <!-- 애프터 메뉴 리스트 -->
+                    <div id="content-after" class="grid gap-3 md:gap-4 transition-all duration-500 hidden opacity-0 translate-x-10 absolute top-0 w-full">
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <h4 class="text-base md:text-lg font-bold text-gray-800 mb-1">크림 파스타 / 리조또</h4>
+                                <p class="text-xs md:text-sm text-gray-500">고소한 우유 크림의 풍미가 가득한 마무리</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">2,900원</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <h4 class="text-base md:text-lg font-bold text-gray-800 mb-1">로제 파스타 / 리조또 / 떡볶이</h4>
+                                <p class="text-xs md:text-sm text-gray-500">토마토와 크림의 황금비율로 즐기는 로제 소스</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">3,500원</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <h4 class="text-base md:text-lg font-bold text-gray-800 mb-1">크림마라 파스타 / 리조또 / 떡볶이</h4>
+                                <p class="text-xs md:text-sm text-gray-500">부드러운 크림 속에 숨겨진 알싸한 마라의 매력</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">3,500원</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <h4 class="text-base md:text-lg font-bold text-gray-800 mb-1">크림불닭 파스타 / 리조또 / 떡볶이</h4>
+                                <p class="text-xs md:text-sm text-gray-500">화끈한 불닭 소스와 부드러운 크림의 중독적인 만남</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">3,500원</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-transparent hover:border-[#384c2a] cursor-default">
+                            <div>
+                                <h4 class="text-base md:text-lg font-bold text-gray-800 mb-1">국물 떡볶이</h4>
+                                <p class="text-xs md:text-sm text-gray-500">감칠맛 가득한 진한 육수로 즐기는 매콤 떡볶이</p>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-3 md:ml-4">
+                                <span class="block font-bold text-[#384c2a] text-base md:text-lg">2,900원</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </RevealOnScroll>
             </div>
-            <div className="order-1 md:order-2 space-y-4 md:space-y-6">
-              <RevealOnScroll delay={200}>
-                <h2 className="text-2xl md:text-4xl font-bold text-gray-900">
-                  따스함이 느껴지는<br/>
-                  <span className={TEXT_MAIN}>여유와 쉼의 공간</span>
-                </h2>
-                <p className="text-gray-600 leading-relaxed text-sm md:text-lg">
-                  샤브토랑 창원점은 따뜻한 우드톤과 품격 있는 다크 그린 컬러로 
-                  도심 속 작은 정원을 표현했습니다.
-                </p>
-                <ul className="space-y-3 md:space-y-4">
-                  <li className="flex items-center gap-3">
-                    <CheckCircle2 className={`${TEXT_POINT} md:w-5 md:h-5`} size={18} />
-                    <span className="text-sm md:text-base text-gray-700">혼자서도 편안한 <strong>1인 바(Bar) 좌석</strong></span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle2 className={`${TEXT_POINT} md:w-5 md:h-5`} size={18} />
-                    <span className="text-sm md:text-base text-gray-700">여럿이 즐기는 <strong>4인 테이블 완비</strong></span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle2 className={`${TEXT_POINT} md:w-5 md:h-5`} size={18} />
-                    <span className="text-sm md:text-base text-gray-700">위생적인 <strong>개별 인덕션 시스템</strong></span>
-                  </li>
-                </ul>
-                <div className="pt-2 md:pt-4">
-                  <div className={`inline-flex items-center gap-2 ${BRAND_MAIN} bg-opacity-20 px-3 py-2 md:px-4 rounded-lg text-[#384c2a] text-sm md:text-base font-medium hover:bg-opacity-30 transition cursor-default`}>
-                    <span className="animate-bounce">📸</span> 데이트 코스로도 손색없는 감성 인테리어
-                  </div>
-                </div>
-              </RevealOnScroll>
+            
+            <div class="mt-8 md:mt-10 text-center">
+                <p class="text-gray-500 text-xs md:text-sm mb-4">* 모든 메뉴는 포장 가능합니다. (비조리/조리 선택 가능)</p>
             </div>
-          </div>
         </div>
-      </section>
+    </section>
 
-      {/* 위치 및 정보 섹션 */}
-      <section id="location" className={`py-12 md:py-20 ${BRAND_POINT} text-white`}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-            <RevealOnScroll>
-              <div className="space-y-6 md:space-y-8">
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">오시는 길</h2>
-                  <div className="space-y-4 text-white/90">
-                    <div className="flex items-start gap-3 md:gap-4 group">
-                      <MapPin className="text-[#fac03b] mt-1 group-hover:scale-110 transition flex-shrink-0" size={20} />
-                      <div>
-                        <p className="font-bold text-white text-base md:text-lg">경남 창원시 성산구 마디미로 (상남동)</p>
-                        <p className="text-xs md:text-sm opacity-70 mt-1">상남시장 도보 3분 / 공영주차장 이용 가능</p>
-                      </div>
+    <!-- 인테리어 섹션 -->
+    <section id="interior" class="py-12 md:py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <div class="reveal-on-scroll grid grid-cols-2 gap-3 md:gap-4">
+                        <div class="h-32 md:h-48 bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden shadow-lg relative group">
+                            <img src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/table1.jpg" alt="매장 인테리어1" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition"></div>
+                        </div>
+                        <div class="h-32 md:h-48 bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden shadow-lg mt-4 md:mt-8 relative group">
+                            <img src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/table2.jpg" alt="매장 인테리어2" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition"></div>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-3 md:gap-4 group">
-                      <Phone className="text-[#fac03b] group-hover:scale-110 transition flex-shrink-0" size={20} />
-                      <p className="font-bold text-white text-base md:text-lg">055-000-0000</p>
-                    </div>
-                    <div className="flex items-start gap-3 md:gap-4 group">
-                      <Clock className="text-[#fac03b] mt-1 group-hover:scale-110 transition flex-shrink-0" size={20} />
-                      <div>
-                        <p className="font-bold text-white text-sm md:text-base">매일 11:00 - 22:00</p>
-                        <p className="text-xs md:text-sm opacity-70">브레이크타임 15:00 - 17:00 (주말 제외)</p>
-                        <p className="text-xs md:text-sm opacity-70">라스트오더 21:00</p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
+                <div class="order-1 md:order-2 space-y-4 md:space-y-6">
+                    <div class="reveal-on-scroll" style="transition-delay: 200ms;">
+                        <h2 class="text-2xl md:text-4xl font-bold text-gray-900">
+                            따스함이 느껴지는<br/>
+                            <span class="text-[#fac03b]">여유와 쉼의 공간</span>
+                        </h2>
+                        <p class="text-gray-600 leading-relaxed text-sm md:text-lg mt-4">
+                            샤브토랑 창원점은 따뜻한 우드톤과 품격 있는 다크 그린 컬러로 
+                            도심 속 작은 정원을 표현했습니다.
+                        </p>
+                        <ul class="space-y-3 md:space-y-4 mt-6">
+                            <li class="flex items-center gap-3">
+                                <i data-lucide="check-circle-2" class="text-[#384c2a] w-5 h-5"></i>
+                                <span class="text-sm md:text-base text-gray-700">혼자서도 편안한 <strong>1인 바(Bar) 좌석</strong></span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i data-lucide="check-circle-2" class="text-[#384c2a] w-5 h-5"></i>
+                                <span class="text-sm md:text-base text-gray-700">여럿이 즐기는 <strong>4인 테이블 완비</strong></span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i data-lucide="check-circle-2" class="text-[#384c2a] w-5 h-5"></i>
+                                <span class="text-sm md:text-base text-gray-700">위생적인 <strong>개별 인덕션 시스템</strong></span>
+                            </li>
+                        </ul>
+                        <div class="pt-2 md:pt-4">
+                            <div class="inline-flex items-center gap-2 bg-[#fac03b]/20 px-3 py-2 md:px-4 rounded-lg text-[#384c2a] text-sm md:text-base font-medium hover:bg-opacity-30 transition cursor-default">
+                                <span class="animate-bounce">📸</span> 데이트 코스로도 손색없는 감성 인테리어
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 위치 정보 섹션 -->
+    <section id="location" class="py-12 md:py-20 bg-[#384c2a] text-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                <div class="reveal-on-scroll">
+                    <div class="space-y-6 md:space-y-8">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6">오시는 길</h2>
+                            <div class="space-y-4 text-white/90">
+                                <div class="flex items-start gap-3 md:gap-4 group">
+                                    <i data-lucide="map-pin" class="text-[#fac03b] w-5 h-5 mt-1 group-hover:scale-110 transition flex-shrink-0"></i>
+                                    <div>
+                                        <p class="font-bold text-white text-base md:text-lg">경남 창원시 성산구 마디미로 (상남동)</p>
+                                        <p class="text-xs md:text-sm opacity-70 mt-1">상남시장 도보 3분 / 공영주차장 이용 가능</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 md:gap-4 group">
+                                    <i data-lucide="phone" class="text-[#fac03b] w-5 h-5 group-hover:scale-110 transition flex-shrink-0"></i>
+                                    <p class="font-bold text-white text-base md:text-lg">055-000-0000</p>
+                                </div>
+                                <div class="flex items-start gap-3 md:gap-4 group">
+                                    <i data-lucide="clock" class="text-[#fac03b] w-5 h-5 mt-1 group-hover:scale-110 transition flex-shrink-0"></i>
+                                    <div>
+                                        <p class="font-bold text-white text-sm md:text-base">매일 11:00 - 22:00</p>
+                                        <p class="text-xs md:text-sm opacity-70">브레이크타임 15:00 - 17:00 (주말 제외)</p>
+                                        <p class="text-xs md:text-sm opacity-70">라스트오더 21:00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-6 md:pt-8 border-t border-white/20">
+                            <h3 class="font-bold mb-3 md:mb-4 flex items-center gap-2 text-base md:text-lg">
+                                <i data-lucide="instagram" class="text-[#fac03b] w-5 h-5"></i> 
+                                샤브토랑 창원점 소식 받기
+                            </h3>
+                            <p class="text-xs md:text-sm text-white/70 mb-4">인스타그램 팔로우하고 게릴라 이벤트 소식을 받아보세요!</p>
+                            <a href="#" class="inline-block bg-white/10 hover:bg-white/20 px-5 py-2 md:px-6 rounded-lg transition text-xs md:text-sm hover:scale-105 active:scale-95">
+                                @shabutaurant_changwon
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-on-scroll" style="transition-delay: 200ms;">
+                    <div class="h-64 md:h-full bg-white/5 rounded-xl md:rounded-2xl overflow-hidden relative group backdrop-blur-sm border border-white/10">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white/50 transition duration-300 group-hover:text-white/80">
+                            <i data-lucide="map-pin" class="w-10 h-10 md:w-12 md:h-12 mb-2 animate-bounce"></i>
+                            <p class="text-sm md:text-base">지도 영역 (네이버/카카오맵 API 연동)</p>
+                        </div>
+                        <div class="absolute bottom-4 right-4 flex gap-2">
+                            <button class="bg-[#fac03b] text-[#384c2a] px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-xs shadow hover:bg-white transition hover:-translate-y-1">카카오맵</button>
+                            <button class="bg-green-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-xs shadow hover:bg-green-600 transition hover:-translate-y-1">네이버지도</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="bg-[#2a3821] text-gray-400 py-6 md:py-8 border-t border-white/10 text-xs md:text-sm">
+        <div class="max-w-6xl mx-auto px-4 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                    <img src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/logo.png" alt="샤브토랑 로고" class="h-4 md:h-5 w-auto opacity-70 grayscale hover:grayscale-0 transition duration-300">
+                    <span class="font-bold text-gray-300">샤브토랑 창원점</span>
+                </div>
+                <p>대표: 김샤브 | 사업자등록번호: 000-00-00000</p>
+                <p class="mt-1">Copyright © 2024 Shabutaurant Changwon. All rights reserved.</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-white transition">이용약관</a>
+                <a href="#" class="hover:text-white transition">개인정보처리방침</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Top 버튼 -->
+    <button id="top-btn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-[#fac03b] p-2 md:p-3 rounded-full text-white shadow-lg z-40 transition-all duration-300 hover:scale-110 active:scale-95 opacity-0 translate-y-10">
+        <i data-lucide="arrow-up" class="w-5 h-5 md:w-6 md:h-6"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script>
+        // 1. Lucide 아이콘 실행
+        lucide.createIcons();
+
+        // 2. 모바일 메뉴 토글
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('max-h-0', 'opacity-0');
+                mobileMenu.classList.add('max-h-60', 'opacity-100');
+            } else {
+                mobileMenu.classList.remove('max-h-60', 'opacity-100');
+                mobileMenu.classList.add('max-h-0', 'opacity-0');
+            }
+        });
+
+        // 모바일 메뉴 링크 클릭 시 닫기
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.remove('max-h-60', 'opacity-100');
+                mobileMenu.classList.add('max-h-0', 'opacity-0');
+            });
+        });
+
+        // 3. 탭 전환 로직
+        function switchTab(tabName) {
+            const btnShabu = document.getElementById('tab-shabu');
+            const btnAfter = document.getElementById('tab-after');
+            const contentShabu = document.getElementById('content-shabu');
+            const contentAfter = document.getElementById('content-after');
+            const imgShabu = document.getElementById('img-shabu');
+            const imgAfter = document.getElementById('img-after');
+
+            // 스타일 초기화 클래스
+            const activeClass = ['bg-[#384c2a]', 'text-white', 'shadow-lg', 'scale-105'];
+            const inactiveClass = ['text-gray-500', 'hover:bg-gray-100'];
+
+            if (tabName === 'shabu') {
+                // 버튼 스타일
+                btnShabu.classList.add(...activeClass);
+                btnShabu.classList.remove(...inactiveClass);
+                btnAfter.classList.remove(...activeClass);
+                btnAfter.classList.add(...inactiveClass);
+
+                // 리스트 표시 (hidden 클래스 대신 display style 및 opacity/translate 활용)
+                contentShabu.classList.remove('hidden', 'opacity-0', '-translate-x-10');
+                contentShabu.classList.add('opacity-100', 'translate-x-0');
                 
-                <div className="pt-6 md:pt-8 border-t border-white/20">
-                  <h3 className="font-bold mb-3 md:mb-4 flex items-center gap-2 text-base md:text-lg">
-                    <Instagram className="text-[#fac03b]" size={20} /> 
-                    샤브토랑 창원점 소식 받기
-                  </h3>
-                  <p className="text-xs md:text-sm text-white/70 mb-4">인스타그램 팔로우하고 게릴라 이벤트 소식을 받아보세요!</p>
-                  <a href="#" className="inline-block bg-white/10 hover:bg-white/20 px-5 py-2 md:px-6 rounded-lg transition text-xs md:text-sm hover:scale-105 active:scale-95">
-                    @shabutaurant_changwon
-                  </a>
-                </div>
-              </div>
-            </RevealOnScroll>
+                // content-after를 숨길 때 absolute로 겹쳐있으므로 처리 필요
+                contentAfter.classList.add('hidden', 'opacity-0', 'translate-x-10');
+                contentAfter.classList.remove('opacity-100', 'translate-x-0');
 
-            {/* 지도 플레이스홀더 - 높이 조정 */}
-            <RevealOnScroll delay={200}>
-              <div className="h-64 md:h-full bg-white/5 rounded-xl md:rounded-2xl overflow-hidden relative group backdrop-blur-sm border border-white/10">
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white/50 transition duration-300 group-hover:text-white/80">
-                  <MapPin size={40} className="mb-2 animate-bounce md:w-12 md:h-12" />
-                  <p className="text-sm md:text-base">지도 영역 (네이버/카카오맵 API 연동)</p>
-                </div>
-                {/* 실제 지도 API 연동 시 이 부분을 교체 */}
-                <div className="absolute bottom-4 right-4 flex gap-2">
-                   <button className="bg-[#fac03b] text-[#384c2a] px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-xs shadow hover:bg-white transition hover:-translate-y-1">카카오맵</button>
-                   <button className="bg-green-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-xs shadow hover:bg-green-600 transition hover:-translate-y-1">네이버지도</button>
-                </div>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+                // 이미지 전환
+                imgShabu.classList.remove('opacity-0', 'scale-90', '-rotate-12', 'pointer-events-none');
+                imgShabu.classList.add('opacity-100', 'scale-100', 'rotate-0');
+                
+                imgAfter.classList.add('opacity-0', 'scale-90', 'rotate-12', 'pointer-events-none');
+                imgAfter.classList.remove('opacity-100', 'scale-100', 'rotate-0');
 
-      {/* 푸터 */}
-      <footer className="bg-[#2a3821] text-gray-400 py-6 md:py-8 border-t border-white/10 text-xs md:text-sm">
-        <div className="max-w-6xl mx-auto px-4 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-            <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <img 
-                src="https://oneapp2.godohosting.com/%EC%83%A4%EB%B8%8C%ED%86%A0%EB%9E%91/logo.png" 
-                alt="샤브토랑 로고" 
-                className="h-4 md:h-5 w-auto opacity-70 grayscale hover:grayscale-0 transition duration-300"
-              />
-              <span className="font-bold text-gray-300">샤브토랑 창원점</span>
-            </div>
-            <p>대표: 김샤브 | 사업자등록번호: 000-00-00000</p>
-            <p className="mt-1">Copyright © 2024 Shabutaurant Changwon. All rights reserved.</p>
-          </div>
-          <div className="flex gap-4">
-             <a href="#" className="hover:text-white transition">이용약관</a>
-             <a href="#" className="hover:text-white transition">개인정보처리방침</a>
-          </div>
-        </div>
-      </footer>
+            } else {
+                // 버튼 스타일
+                btnAfter.classList.add(...activeClass);
+                btnAfter.classList.remove(...inactiveClass);
+                btnShabu.classList.remove(...activeClass);
+                btnShabu.classList.add(...inactiveClass);
 
-      {/* Top 버튼 */}
-      <button 
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-6 right-6 md:bottom-8 md:right-8 ${BRAND_MAIN} p-2 md:p-3 rounded-full text-white shadow-lg z-40 transition-all duration-300 hover:scale-110 active:scale-95 ${isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-      >
-        <ArrowUp size={20} className="md:w-6 md:h-6" />
-      </button>
-    </div>
-  );
-};
+                // 리스트 표시
+                contentAfter.classList.remove('hidden', 'opacity-0', 'translate-x-10');
+                contentAfter.classList.add('opacity-100', 'translate-x-0');
+                
+                contentShabu.classList.add('hidden', 'opacity-0', '-translate-x-10');
+                contentShabu.classList.remove('opacity-100', 'translate-x-0');
 
-export default ShabutaurantChangwon;
+                // 이미지 전환
+                imgAfter.classList.remove('opacity-0', 'scale-90', 'rotate-12', 'pointer-events-none');
+                imgAfter.classList.add('opacity-100', 'scale-100', 'rotate-0');
+                
+                imgShabu.classList.add('opacity-0', 'scale-90', '-rotate-12', 'pointer-events-none');
+                imgShabu.classList.remove('opacity-100', 'scale-100', 'rotate-0');
+            }
+        }
+
+        // 4. 스크롤 감지 (헤더 스타일 & Top 버튼 & Scroll Reveal)
+        const header = document.getElementById('main-header');
+        const topBtn = document.getElementById('top-btn');
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+
+        window.addEventListener('scroll', () => {
+            // 헤더 & Top 버튼
+            if (window.scrollY > 50) {
+                header.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-md', 'py-2');
+                header.classList.remove('py-3', 'md:py-4');
+                topBtn.classList.remove('opacity-0', 'translate-y-10');
+                topBtn.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                header.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-md', 'py-2');
+                header.classList.add('py-3', 'md:py-4');
+                topBtn.classList.add('opacity-0', 'translate-y-10');
+                topBtn.classList.remove('opacity-100', 'translate-y-0');
+            }
+
+            // Scroll Reveal Animation
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (elementTop < windowHeight * 0.9) {
+                    el.classList.add('is-visible');
+                }
+            });
+        });
+
+        // 초기 로드시 한번 체크
+        window.dispatchEvent(new Event('scroll'));
+
+    </script>
+</body>
+</html>
