@@ -94,23 +94,9 @@
                 </a>
             </nav>
 
-            <button id="mobile-menu-btn" class="md:hidden p-1">
-                <i data-lucide="menu" class="text-[#384c2a] w-6 h-6"></i>
-            </button>
-
-            <a href="https://map.naver.com/p/entry/place/2017998522?lng=128.6857857&lat=35.2235528&placePath=%2Fhome&entry=plt&searchType=place" target="_blank" class="hidden md:block bg-[#384c2a] text-white px-5 py-2 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition shadow-md">
+            <a href="https://map.naver.com/p/entry/place/2017998522?lng=128.6857857&lat=35.2235528&placePath=%2Fhome&entry=plt&searchType=place" target="_blank" class="bg-[#384c2a] text-white px-4 py-2 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-bold hover:scale-105 active:scale-95 transition shadow-md">
                 예약하기
             </a>
-        </div>
-
-        <!-- 모바일 메뉴 -->
-        <div id="mobile-menu" class="md:hidden bg-white border-b absolute w-full shadow-lg transition-all duration-300 overflow-hidden max-h-0 opacity-0">
-            <div class="flex flex-col gap-4 text-center p-4">
-                <a href="#about" class="mobile-link text-gray-700 font-medium py-1 active:text-[#384c2a]">브랜드 소개</a>
-                <a href="#menu" class="mobile-link text-gray-700 font-medium py-1 active:text-[#384c2a]">메뉴</a>
-                <a href="#interior" class="mobile-link text-gray-700 font-medium py-1 active:text-[#384c2a]">공간</a>
-                <a href="#location" class="mobile-link text-gray-700 font-medium py-1 active:text-[#384c2a]">오시는 길</a>
-            </div>
         </div>
     </header>
 
@@ -215,9 +201,9 @@
                 </div>
                 <h3 class="text-lg md:text-5xl font-extrabold mb-2 md:mb-4 leading-tight">믿고 먹는 배우,<br class="md:hidden"/> 류수영의 선택!</h3>
                 <div class="relative inline-block mt-1 md:mt-2 ml-4 md:ml-6">
-                    <i data-lucide="quote" class="w-4 h-4 md:w-6 md:h-6 transform rotate-180 opacity-40 absolute -top-2 -left-5 md:-top-4 md:-left-8"></i>
+                    <i data-lucide="quote" class="w-3 h-3 md:w-5 md:h-5 transform rotate-180 opacity-30 absolute -top-1 -left-4 md:-top-2 md:-left-7"></i>
                     <p class="font-medium text-xs md:text-xl opacity-90 break-keep relative z-10">건강하고 맛있는 한 끼, 샤브토랑에서 시작하세요</p>
-                    <i data-lucide="quote" class="w-4 h-4 md:w-6 md:h-6 opacity-40 absolute -bottom-2 -right-5 md:-bottom-4 md:-right-8"></i>
+                    <i data-lucide="quote" class="w-3 h-3 md:w-5 md:h-5 opacity-30 absolute -top-1 -right-4 md:-top-2 md:-right-7"></i>
                 </div>
             </div>
         </div>
@@ -499,7 +485,7 @@
                                 </div>
                                 <div class="flex items-center gap-3 md:gap-4 group">
                                     <i data-lucide="phone" class="text-[#fac03b] w-5 h-5 group-hover:scale-110 transition flex-shrink-0"></i>
-                                    <p class="font-bold text-white text-base md:text-lg">055-000-0000</p>
+                                    <p class="font-bold text-white text-base md:text-lg">0507-1415-4399</p>
                                 </div>
                                 <div class="flex items-start gap-3 md:gap-4 group">
                                     <i data-lucide="clock" class="text-[#fac03b] w-5 h-5 mt-1 group-hover:scale-110 transition flex-shrink-0"></i>
@@ -575,33 +561,7 @@
         // 1. Lucide 아이콘 실행
         lucide.createIcons();
 
-        // 2. 모바일 메뉴 토글
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-        let isMenuOpen = false;
-
-        mobileMenuBtn.addEventListener('click', () => {
-            isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) {
-                mobileMenu.classList.remove('max-h-0', 'opacity-0');
-                mobileMenu.classList.add('max-h-60', 'opacity-100');
-            } else {
-                mobileMenu.classList.remove('max-h-60', 'opacity-100');
-                mobileMenu.classList.add('max-h-0', 'opacity-0');
-            }
-        });
-
-        // 모바일 메뉴 링크 클릭 시 닫기
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                isMenuOpen = false;
-                mobileMenu.classList.remove('max-h-60', 'opacity-100');
-                mobileMenu.classList.add('max-h-0', 'opacity-0');
-            });
-        });
-
-        // 3. 탭 전환 로직 (수정됨: display:none 방식 사용)
+        // 2. 탭 전환 로직 (수정됨: display:none 방식 사용)
         function switchTab(tabName) {
             const btnShabu = document.getElementById('tab-shabu');
             const btnAfter = document.getElementById('tab-after');
